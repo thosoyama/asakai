@@ -6,14 +6,19 @@ const options = {
 };
 
 const Editor: React.FC = () => {
+  let editor;
+
+  window.addEventListener('resize', () => editor.layout());
+
   return (
     <MonacoEditor
       width="100%"
-      height="768"
+      height={window.innerHeight - 100}
       language="markdown"
       theme="vs-dark"
       options={options}
       value=""
+      editorDidMount={obj => editor = obj}
     />
   );
 }
