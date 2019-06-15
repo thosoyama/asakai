@@ -17,7 +17,7 @@
     "typescript": "3.5.1"
   },
   "scripts": {
-    "build": "react-scripts build && mv build docs",
+    "build": "rm -rf docs build && react-scripts build && mv build docs",
     "start": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
