@@ -1,14 +1,14 @@
-import React from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import React from 'react'
+import MonacoEditor from 'react-monaco-editor'
 
 const options = {
   fontSize: 16,
-};
+}
 
 const Editor: React.FC = () => {
-  let editor;
+  let editor
 
-  window.addEventListener('resize', () => editor.layout());
+  window.addEventListener('resize', () => editor.layout())
 
   return (
     <MonacoEditor
@@ -20,7 +20,7 @@ const Editor: React.FC = () => {
       value=""
       editorDidMount={obj => editor = obj}
     />
-  );
+  )
 }
 
 export default Editor;
