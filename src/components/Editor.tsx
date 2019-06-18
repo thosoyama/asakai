@@ -5,6 +5,10 @@ const options = {
   fontSize: 16,
 }
 
+const onChange = (text) => {
+  window.localStorage.setItem('text', text)
+}
+
 const Editor: React.FC = () => {
   let editor
 
@@ -17,10 +21,11 @@ const Editor: React.FC = () => {
       language="markdown"
       theme="vs-dark"
       options={options}
-      value=""
+      value={window.localStorage.getItem('text') || ''}
+      onChange={onChange}
       editorDidMount={obj => editor = obj}
     />
   )
 }
 
-export default Editor;
+export default Editor
