@@ -1,22 +1,58 @@
-import React from 'react'
+import React, { useReducer, useContext, useEffect } from 'react'
 import styled from 'styled-components'
+import TimerReducer, { TimerContext, initialState, expload, tick, toggle, reset, lap } from '../modules/Timer'
+import Button from './Button'
 
-interface TimerState {
-  time: number
-  minutes: string
-  seconds: string
+const Timer: React.FC = () => {
+  const { minutes, seconds, isRunning, laps, dispatch } = useContext(TimerContext)
+
+  useEffect(
+    () => {
+      let interval;
+      if (isRunning) {
+        interval = setInterval(() => tick(dispatch), 1000)
+      }
+      return () => clearInterval(interval);
+    },
+    [isRunning, dispatch]
+  );
+
+  return (
+    <StyledTimer>
+      <div>
+        <span>{minutes}</span>:
+        <span>{seconds}</span>
+      </div>
+      <Button onClick={() => toggle(dispatch)} isRunning={isRunning} isErapsed>{isRunning ? 'Stop' : 'Start' }</Button>
+      <Button onClick={() => isRunning ? lap(dispatch) : reset(dispatch)} isRunning={isRunning}>{isRunning ? '+Lap' : 'Reset' }</Button>
+      <Laps>
+        {laps.map((lap, i) => {
+          const lapTime = expload(i === 0 ? lap : Number(lap) - Number(laps[i - 1]));
+          return (
+            <li key={i}>{ lapTime.minutes }m{ lapTime.seconds }s</li>
+          )
+        })}
+      </Laps>
+    </StyledTimer>
+  )
 }
 
-const initialData: TimerState = {
-  time: 0,
-  minutes: '00',
-  seconds: '00',
+const TimerContainer: React.FC = () => {
+  const [ state, dispatch ] = useReducer(TimerReducer, initialState)
+
+  return (
+    <TimerContext.Provider value={{ ...state, dispatch }}>
+        <Timer />
+    </TimerContext.Provider>
+  )
 }
 
 const StyledTimer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
+  box-sizing: border-box;
+  padding: 0 20px;
   width: 100%;
   height: 100px;
   background-color: #333;
@@ -25,28 +61,14 @@ const StyledTimer = styled.div`
   color: #fff;
 `
 
-const toText = n => ('00' + n).slice(-2)
-
-const Timer: React.FC = () => {
-  const [state, setState] = React.useState<TimerState>(initialData)
-
-  const tick = () => {
-    const time = state.time + 1
-    const newState: TimerState = {
-      time,
-      minutes: toText(Math.floor(time / 60) % 60),
-      seconds: toText(time % 60),
-    }
-    setState(newState)
+const Laps = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 16px;
+  list-style-type: none;
+  li {
+    margin: 10px;
   }
+`
 
-  setTimeout(tick, 1000)
-
-  return (
-    <StyledTimer>
-      <span>{state.minutes}</span>:<span>{state.seconds}</span>
-    </StyledTimer>
-  )
-}
-
-export default Timer
+export default TimerContainer
