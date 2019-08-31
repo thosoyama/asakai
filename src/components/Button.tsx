@@ -26,7 +26,6 @@ const Button: React.FC<ButtonProps> = (props) => {
 }
 
 const NormalButton = styled.button<ButtonProps>`
-    margin: 0 10px;
     width: 50px;
     height: 50px;
     border: 1px solid #333;

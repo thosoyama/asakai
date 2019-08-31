@@ -19,20 +19,21 @@ const Timer: React.FC = () => {
 
   return (
     <StyledTimer>
-      <div>
-        <span>{minutes}</span>:
-        <span>{seconds}</span>
-      </div>
-      <Button onClick={() => toggle(dispatch)} isRunning={isRunning} isErapsed>{isRunning ? 'Stop' : 'Start' }</Button>
-      <Button onClick={() => isRunning ? lap(dispatch) : reset(dispatch)} isRunning={isRunning}>{isRunning ? '+Lap' : 'Reset' }</Button>
-      <Laps>
+      <StyledTime>
+        <span>{minutes}:{seconds}</span>
+      </StyledTime>
+      <StyledButtons>
+        <Button onClick={() => toggle(dispatch)} isRunning={isRunning} isErapsed>{isRunning ? 'Stop' : 'Start' }</Button>
+        <Button onClick={() => isRunning ? lap(dispatch) : reset(dispatch)} isRunning={isRunning}>{isRunning ? '+Lap' : 'Reset' }</Button>
+      </StyledButtons>
+      <StyldLaps>
         {laps.map((lap, i) => {
           const lapTime = expload(i === 0 ? lap : Number(lap) - Number(laps[i - 1]));
           return (
-            <li key={i}>{ lapTime.minutes }m{ lapTime.seconds }s</li>
+            <li key={i}>{ Number(lapTime.minutes) }m{ Number(lapTime.seconds) }s</li>
           )
         })}
-      </Laps>
+      </StyldLaps>
     </StyledTimer>
   )
 }
@@ -42,7 +43,7 @@ const TimerContainer: React.FC = () => {
 
   return (
     <TimerContext.Provider value={{ ...state, dispatch }}>
-        <Timer />
+      <Timer />
     </TimerContext.Provider>
   )
 }
@@ -56,18 +57,41 @@ const StyledTimer = styled.div`
   width: 100%;
   height: 100px;
   background-color: #333;
+`
+
+const StyledTime = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
   font-family: monospace;
   font-size: 50px;
   color: #fff;
 `
 
-const Laps = styled.ul`
+const StyledButtons = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
+  button:last-child {
+    margin-left: 10px;
+  }
+`
+
+const StyldLaps = styled.ul`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  padding: 10px;
   flex-wrap: wrap;
-  font-size: 16px;
   list-style-type: none;
-  li {
-    margin: 10px;
+  font-size: 16px;
+  color: #fff;
+  overflow-y: auto;
+  li:not(first-child) {
+    margin-left: 10px;
+    padding: 2px;
   }
 `
 
