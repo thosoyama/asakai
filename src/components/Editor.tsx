@@ -17,7 +17,7 @@ const Editor: React.FC = () => {
   return (
     <MonacoEditor
       width="100%"
-      height={window.innerHeight - 100}
+      height="100%"
       language="markdown"
       theme="vs-dark"
       options={options}
