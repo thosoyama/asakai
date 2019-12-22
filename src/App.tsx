@@ -11,7 +11,7 @@ const App: React.FC = () => {
     <StyledApp className="App">
       <StyledGlobal />
       <TimerContext.Provider value={{ ...state }}>
-        <DispachContext.Provider value={{ dispatch }}>
+        <DispachContext.Provider value={ dispatch }>
           <Timer />
         </DispachContext.Provider>
       </TimerContext.Provider>

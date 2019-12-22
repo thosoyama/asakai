@@ -19,12 +19,7 @@ export const initialState: TimerState = {
 
 export const TimerContext = createContext(initialState)
 
-type TimerDispatch = {
-  dispatch: React.Dispatch<any>
-}
-const initialDispatch: TimerDispatch = {
-  dispatch: () => {}
-}
+const initialDispatch: React.Dispatch<any> = () => {}
 
 export const DispachContext = createContext(initialDispatch);
 
@@ -33,8 +28,8 @@ type Dispacher = {
 }
 
 export const useDispacher = () => {
-  const { dispatch } = useContext(DispachContext);
-  const dispachers: Dispacher = {
+  const dispatch = useContext(DispachContext);
+  const dispacher: Dispacher = {
     tick: () => {
       dispatch({ type: 'tick', payload: {} })
     },
@@ -48,7 +43,7 @@ export const useDispacher = () => {
       dispatch({ type: 'lap', payload: {} })      
     }
   }
-  return dispachers;
+  return dispacher;
 }
 
 const toText = n => ('00' + n).slice(-2)
