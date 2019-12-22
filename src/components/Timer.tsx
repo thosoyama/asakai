@@ -1,20 +1,21 @@
-import React, { useReducer, useContext, useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
-import TimerReducer, { TimerContext, initialState, expload, tick, toggle, reset, lap } from '../modules/Timer'
+import { TimerContext, expload, useDispacher } from '../modules/Timer'
 import Button from './Button'
 
 const Timer: React.FC = () => {
-  const { minutes, seconds, isRunning, laps, dispatch } = useContext(TimerContext)
+  const { minutes, seconds, isRunning, laps } = useContext(TimerContext)
+  const { tick, lap, toggle, reset } = useDispacher()
 
   useEffect(
     () => {
       let interval;
       if (isRunning) {
-        interval = setInterval(() => tick(dispatch), 1000)
+        interval = setInterval(() => tick(), 1000)
       }
       return () => clearInterval(interval);
     },
-    [isRunning, dispatch]
+    [isRunning, tick]
   );
 
   return (
@@ -23,8 +24,8 @@ const Timer: React.FC = () => {
         <span>{minutes}:{seconds}</span>
       </StyledTime>
       <StyledButtons>
-        <Button onClick={() => toggle(dispatch)} isRunning={isRunning} isErapsed>{isRunning ? 'Stop' : 'Start' }</Button>
-        <Button onClick={() => isRunning ? lap(dispatch) : reset(dispatch)} isRunning={isRunning}>{isRunning ? '+Lap' : 'Reset' }</Button>
+        <Button onClick={() => toggle()} isRunning={isRunning} isErapsed>{isRunning ? 'Stop' : 'Start' }</Button>
+        <Button onClick={() => isRunning ? lap() : reset()} isRunning={isRunning}>{isRunning ? '+Lap' : 'Reset' }</Button>
       </StyledButtons>
       <StyldLaps>
         {laps.map((lap, i) => {
@@ -35,16 +36,6 @@ const Timer: React.FC = () => {
         })}
       </StyldLaps>
     </StyledTimer>
-  )
-}
-
-const TimerContainer: React.FC = () => {
-  const [ state, dispatch ] = useReducer(TimerReducer, initialState)
-
-  return (
-    <TimerContext.Provider value={{ ...state, dispatch }}>
-      <Timer />
-    </TimerContext.Provider>
   )
 }
 
@@ -95,4 +86,4 @@ const StyldLaps = styled.ul`
   }
 `
 
-export default TimerContainer
+export default Timer

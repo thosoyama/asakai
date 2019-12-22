@@ -1,3 +1,4 @@
+import React, { useContext } from 'react'
 import { createContext } from 'react'
 
 export interface TimerState {
@@ -16,37 +17,38 @@ export const initialState: TimerState = {
   laps: [],
 }
 
-export const TimerContext = createContext({
-  ...initialState,
-  dispatch: null,
-})
+export const TimerContext = createContext(initialState)
 
-export const tick = (dispatch) => {
-  dispatch({
-    type: 'tick',
-    payload: {},
-  })
+type TimerDispatch = {
+  dispatch: React.Dispatch<any>
+}
+const initialDispatch: TimerDispatch = {
+  dispatch: () => {}
 }
 
-export const toggle = (dispatch) => {
-  dispatch({
-    type: 'toggle',
-    payload: {},
-  })
+export const DispachContext = createContext(initialDispatch);
+
+type Dispacher = {
+  [action: string]: () => void
 }
 
-export const reset = (dispatch) => {
-  dispatch({
-    type: 'reset',
-    payload: {},
-  })
-}
-
-export const lap = (dispatch) => {
-  dispatch({
-    type: 'lap',
-    payload: {},
-  })
+export const useDispacher = () => {
+  const { dispatch } = useContext(DispachContext);
+  const dispachers: Dispacher = {
+    tick: () => {
+      dispatch({ type: 'tick', payload: {} })
+    },
+    toggle: () => {
+      dispatch({ type: 'toggle', payload: {} })      
+    },
+    reset: () => {
+      dispatch({ type: 'reset', payload: {} })      
+    },
+    lap: () => {
+      dispatch({ type: 'lap', payload: {} })      
+    }
+  }
+  return dispachers;
 }
 
 const toText = n => ('00' + n).slice(-2)
@@ -58,7 +60,7 @@ export const expload = (time) => {
   }
 }
 
-export default function TimerReducer(state, action) {
+export const TimerReducer = (state, action) => {
   const time = state.time + 1
 
   switch (action.type) {
