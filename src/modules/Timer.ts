@@ -27,9 +27,8 @@ type Dispacher = {
   [action: string]: () => void
 }
 
-export const useDispacher = () => {
-  const dispatch = useContext(DispachContext);
-  const dispacher: Dispacher = {
+const dispacher = (dispatch: React.Dispatch<any>): Dispacher => {
+  return {
     tick: () => {
       dispatch({ type: 'tick', payload: {} })
     },
@@ -43,7 +42,11 @@ export const useDispacher = () => {
       dispatch({ type: 'lap', payload: {} })      
     }
   }
-  return dispacher;
+}
+
+export const useDispacher = () => {
+  const dispatch = useContext(DispachContext);
+  return dispacher(dispatch);
 }
 
 const toText = n => ('00' + n).slice(-2)
